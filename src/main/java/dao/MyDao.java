@@ -7,6 +7,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import dto.Customer;
+import dto.Task;
 
 public class MyDao {
 	EntityManagerFactory factory = Persistence.createEntityManagerFactory("dev");
@@ -25,5 +26,11 @@ public class MyDao {
 			return null;
 		else
 			return customers.get(0);
+	}
+	
+	public void saveTask(Task task) {
+		manager.getTransaction().begin();
+		manager.persist(task);
+		manager.getTransaction().commit();
 	}
 }

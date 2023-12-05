@@ -2,6 +2,7 @@ package service;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import dao.MyDao;
 import dto.Customer;
+import dto.Task;
 import helper.AES;
 
 public class MyService {
@@ -75,5 +77,21 @@ public class MyService {
 				req.getRequestDispatcher("Login.html").include(req, resp);
 			}
 		}
+	}
+
+	public void addTask(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+		String name=req.getParameter("tname");
+		String description=req.getParameter("tdescription");
+		
+		Task task=new Task();
+		task.setName(name);
+		task.setDescription(description);
+		task.setCreatedTime(LocalDateTime.now());
+		
+		MyDao dao=new MyDao();
+		dao.saveTask(task);
+		
+		resp.getWriter().print("<h1 align='center' style='color:green'>Task Saved Success</h1>");
+		req.getRequestDispatcher("Home.jsp").include(req, resp);
 	}
 }
