@@ -1,3 +1,5 @@
+<%@page import="dto.Task"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
@@ -14,7 +16,6 @@ div {
 }
 
 .extra {
-	
 	margin-top: 20px;
 	margin-left: 305px;
 }
@@ -22,16 +23,35 @@ div {
 </head>
 <body>
 	<h1 align="center">This is Home Page</h1>
+	<%
+	List<Task> tasks = (List<Task>) request.getAttribute("tasks");
+	%>
 	<div>
 		<table border="1">
 			<tr>
 				<th>Task Name</th>
 				<th>Task Description</th>
-				<th>Status</th>
 				<th>Created Time</th>
+				<th>Status</th>
 				<th>Delete</th>
 				<th>Edit</th>
 			</tr>
+			<%
+			if (tasks != null) {
+				for (Task task : tasks) {
+			%>
+			<tr>
+				<th><%=task.getName()%></th>
+				<th><%=task.getDescription()%></th>
+				<th><%=task.getCreatedTime()%></th>
+				<th><%=task.isStatus()%></th>
+				<th><button>Delete</button></th>
+				<th><button>Edit</button></th>
+			</tr>
+			<%
+			}
+			}
+			%>
 		</table>
 	</div>
 	<a href="AddTask.html"><button class="extra">Add Task</button></a>

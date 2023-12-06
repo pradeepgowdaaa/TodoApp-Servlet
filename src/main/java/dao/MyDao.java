@@ -33,4 +33,9 @@ public class MyDao {
 		manager.persist(task);
 		manager.getTransaction().commit();
 	}
+	
+	public List<Task> fetchTasks()
+	{
+		return manager.createQuery("select x from Task x").getResultList();
+	}
 }

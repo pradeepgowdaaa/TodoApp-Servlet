@@ -3,6 +3,7 @@ package service;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -70,6 +71,8 @@ public class MyService {
 			if(password.equals(AES.decrypt(customer.getPassword(),"123")))
 			{
 				resp.getWriter().print("<h1 align='center' style='color:green'>Login Success</h1>");
+				List<Task> tasks=dao.fetchTasks();
+				req.setAttribute("tasks",tasks);
 				req.getRequestDispatcher("Home.jsp").include(req, resp);
 			}
 			else {
@@ -90,8 +93,11 @@ public class MyService {
 		
 		MyDao dao=new MyDao();
 		dao.saveTask(task);
+		resp.getWriter().print("<h1 align='center' style='color:green'>Task Added Success</h1>");
 		
-		resp.getWriter().print("<h1 align='center' style='color:green'>Task Saved Success</h1>");
+		List<Task> tasks=dao.fetchTasks();
+		req.setAttribute("tasks",tasks);
+		
 		req.getRequestDispatcher("Home.jsp").include(req, resp);
 	}
 }
