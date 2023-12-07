@@ -34,8 +34,8 @@ public class MyDao {
 		manager.getTransaction().commit();
 	}
 	
-	public List<Task> fetchTasks()
+	public List<Task> fetchTasks(int id)
 	{
-		return manager.createQuery("select x from Task x").getResultList();
+		return manager.createQuery("select x from Task x where customer_id=?1").setParameter(1, id).getResultList();
 	}
 }

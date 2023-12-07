@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import dao.MyDao;
 import dto.Customer;
@@ -62,6 +63,7 @@ public class MyService {
 		String password = req.getParameter("password");
 		MyDao dao = new MyDao();
 		Customer customer = dao.findByEmail(email);
+		
 		if(customer==null)
 		{
 			resp.getWriter().print("<h1 align='center' style='color:red'>Invalid Email</h1>");
@@ -70,8 +72,10 @@ public class MyService {
 		else {
 			if(password.equals(AES.decrypt(customer.getPassword(),"123")))
 			{
+				req.getSession().setAttribute("customer", customer);
+				
 				resp.getWriter().print("<h1 align='center' style='color:green'>Login Success</h1>");
-				List<Task> tasks=dao.fetchTasks();
+				List<Task> tasks=dao.fetchTasks(customer.getId());
 				req.setAttribute("tasks",tasks);
 				req.getRequestDispatcher("Home.jsp").include(req, resp);
 			}
@@ -83,6 +87,7 @@ public class MyService {
 	}
 
 	public void addTask(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+		
 		String name=req.getParameter("tname");
 		String description=req.getParameter("tdescription");
 		
@@ -91,13 +96,18 @@ public class MyService {
 		task.setDescription(description);
 		task.setCreatedTime(LocalDateTime.now());
 		
+		Customer customer=(Customer) req.getSession().getAttribute("customer");
+		
+		task.setCustomer(customer);
+		
 		MyDao dao=new MyDao();
 		dao.saveTask(task);
 		resp.getWriter().print("<h1 align='center' style='color:green'>Task Added Success</h1>");
 		
-		List<Task> tasks=dao.fetchTasks();
+		List<Task> tasks=dao.fetchTasks(customer.getId());
 		req.setAttribute("tasks",tasks);
 		
 		req.getRequestDispatcher("Home.jsp").include(req, resp);
+		
 	}
 }

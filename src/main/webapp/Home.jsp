@@ -44,7 +44,16 @@ div {
 				<th><%=task.getName()%></th>
 				<th><%=task.getDescription()%></th>
 				<th><%=task.getCreatedTime()%></th>
-				<th><%=task.isStatus()%></th>
+				<th>
+					<%
+					if (task.isStatus()) {
+					%> Completed <%
+					} else {
+					%>
+					<button>Complete</button> <%
+ }
+ %>
+				</th>
 				<th><button>Delete</button></th>
 				<th><button>Edit</button></th>
 			</tr>
@@ -55,6 +64,6 @@ div {
 		</table>
 	</div>
 	<a href="AddTask.html"><button class="extra">Add Task</button></a>
-	<a href="Login.html"><button class="extra">Logout</button></a>
+	<a href="logout"><button class="extra">Logout</button></a>
 </body>
 </html>
