@@ -27,15 +27,30 @@ public class MyDao {
 		else
 			return customers.get(0);
 	}
-	
+
 	public void saveTask(Task task) {
 		manager.getTransaction().begin();
 		manager.persist(task);
 		manager.getTransaction().commit();
 	}
-	
-	public List<Task> fetchTasks(int id)
-	{
+
+	public List<Task> fetchTasks(int id) {
 		return manager.createQuery("select x from Task x where customer_id=?1").setParameter(1, id).getResultList();
+	}
+
+	public Task findById(int id) {
+		return manager.find(Task.class, id);
+	}
+
+	public void updateTask(Task task) {
+		manager.getTransaction().begin();
+		manager.merge(task);
+		manager.getTransaction().commit();
+	}
+	
+	public void deleteTask(Task task) {
+		manager.getTransaction().begin();
+		manager.remove(task);
+		manager.getTransaction().commit();
 	}
 }

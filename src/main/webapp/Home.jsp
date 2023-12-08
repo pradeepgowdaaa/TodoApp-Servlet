@@ -50,11 +50,11 @@ div {
 					%> Completed <%
 					} else {
 					%>
-					<button>Complete</button> <%
+					<a href="complete?id=<%=task.getId()%>"><button>Complete</button></a> <%
  }
  %>
 				</th>
-				<th><button>Delete</button></th>
+				<th><a href="delete?id=<%=task.getId()%>"><button>Delete</button></a></th>
 				<th><button>Edit</button></th>
 			</tr>
 			<%

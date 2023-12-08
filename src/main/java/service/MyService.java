@@ -16,6 +16,8 @@ import dto.Task;
 import helper.AES;
 
 public class MyService {
+	
+	MyDao dao=new MyDao();
 
 	public void saveUser(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		String name = req.getParameter("name");
@@ -32,7 +34,7 @@ public class MyService {
 					"<h1 align='center' style='color:red'>Sorry! You are not eligible for Creating Account</h1>");
 			req.getRequestDispatcher("Signup.html").include(req, resp);
 		} else {
-			MyDao dao = new MyDao();
+			
 			Customer customer2 = dao.findByEmail(email);
 
 			if (customer2 == null) {
@@ -62,7 +64,6 @@ public class MyService {
 		String email = req.getParameter("email");
 		String password = req.getParameter("password");
 		
-		MyDao dao = new MyDao();
 		Customer customer = dao.findByEmail(email);
 		
 		if(customer==null)
@@ -103,7 +104,6 @@ public class MyService {
 		
 		task.setCustomer(customer);
 		
-		MyDao dao=new MyDao();
 		dao.saveTask(task);
 		resp.getWriter().print("<h1 align='center' style='color:green'>Task Added Success</h1>");
 		
@@ -112,5 +112,33 @@ public class MyService {
 		
 		req.getRequestDispatcher("Home.jsp").include(req, resp);
 		
+	}
+
+	public void complete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		int id=Integer.parseInt(req.getParameter("id"));
+		Task task=dao.findById(id);
+		task.setStatus(true);
+		dao.updateTask(task);
+		
+		resp.getWriter().print("<h1 align='center' style='color:green'>Status Changed Success</h1>");
+		Customer customer=(Customer) req.getSession().getAttribute("customer");
+		List<Task> tasks=dao.fetchTasks(customer.getId());
+		req.setAttribute("tasks",tasks);
+		
+		req.getRequestDispatcher("Home.jsp").include(req, resp);
+	}
+	
+	public void delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		int id=Integer.parseInt(req.getParameter("id"));
+		Task task=dao.findById(id);
+		
+		dao.deleteTask(task);
+		
+		resp.getWriter().print("<h1 align='center' style='color:green'>Task Deleted Success</h1>");
+		Customer customer=(Customer) req.getSession().getAttribute("customer");
+		List<Task> tasks=dao.fetchTasks(customer.getId());
+		req.setAttribute("tasks",tasks);
+		
+		req.getRequestDispatcher("Home.jsp").include(req, resp);
 	}
 }
