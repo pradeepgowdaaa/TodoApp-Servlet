@@ -61,6 +61,7 @@ public class MyService {
 	public void login(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		String email = req.getParameter("email");
 		String password = req.getParameter("password");
+		
 		MyDao dao = new MyDao();
 		Customer customer = dao.findByEmail(email);
 		
@@ -73,10 +74,12 @@ public class MyService {
 			if(password.equals(AES.decrypt(customer.getPassword(),"123")))
 			{
 				req.getSession().setAttribute("customer", customer);
-				
+				req.getSession().setMaxInactiveInterval(30);
 				resp.getWriter().print("<h1 align='center' style='color:green'>Login Success</h1>");
+				
 				List<Task> tasks=dao.fetchTasks(customer.getId());
 				req.setAttribute("tasks",tasks);
+				
 				req.getRequestDispatcher("Home.jsp").include(req, resp);
 			}
 			else {
