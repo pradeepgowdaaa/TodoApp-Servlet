@@ -11,7 +11,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebFilter({"/add-task"})
+@WebFilter({"/add-task","/delete","/complete"})
 public class CheckSessionFilter implements Filter
 {
 
