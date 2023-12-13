@@ -141,4 +141,28 @@ public class MyService {
 		
 		req.getRequestDispatcher("Home.jsp").include(req, resp);
 	}
+
+	public void updateTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String name=req.getParameter("tname");
+		String description=req.getParameter("tdescription");
+		int id=Integer.parseInt(req.getParameter("id"));
+		Customer customer=(Customer) req.getSession().getAttribute("customer");
+		
+		Task task=new Task();
+		task.setId(id);
+		task.setName(name);
+		task.setDescription(description);
+		task.setCreatedTime(LocalDateTime.now());
+		task.setStatus(false);
+		task.setCustomer(customer);
+		
+		dao.updateTask(task);
+		
+		
+		List<Task> tasks=dao.fetchTasks(customer.getId());
+		req.setAttribute("tasks",tasks);
+		resp.getWriter().print("<h1 align='center' style='color:green'>Task Updated Success</h1>");
+		
+		req.getRequestDispatcher("Home.jsp").include(req, resp);
+	}
 }
